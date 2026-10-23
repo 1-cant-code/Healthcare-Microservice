@@ -5,77 +5,86 @@ import com.pm.patientservice.dto.PatientResponseDTO;
 import com.pm.patientservice.exception.EmailAlreadyExistsException;
 import com.pm.patientservice.exception.PatientNotFoundException;
 import com.pm.patientservice.grpc.BillingServiceGrpcClient;
-import com.pm.patientservice.kafka.KafkaProducer;
+import com.pm.patientservice.kafka.KafkaProducerService;
 import com.pm.patientservice.mapper.PatientMapper;
 import com.pm.patientservice.model.Patient;
 import com.pm.patientservice.repository.PatientRepository;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PatientService {
 
-  private final PatientRepository patientRepository;
-  private final BillingServiceGrpcClient billingServiceGrpcClient;
-  private final KafkaProducer kafkaProducer;
+	private final PatientRepository patientRepository;
 
-  public PatientService(PatientRepository patientRepository,
-      BillingServiceGrpcClient billingServiceGrpcClient,
-      KafkaProducer kafkaProducer) {
-    this.patientRepository = patientRepository;
-    this.billingServiceGrpcClient = billingServiceGrpcClient;
-    this.kafkaProducer = kafkaProducer;
-  }
+	private final BillingServiceGrpcClient billingServiceGrpcClient;
 
-  public List<PatientResponseDTO> getPatients() {
-    List<Patient> patients = patientRepository.findAll();
+	private final KafkaProducerService kafkaProducerService;
 
-    return patients.stream().map(PatientMapper::toDTO).toList();
-  }
+	public PatientService(PatientRepository patientRepository,
+			BillingServiceGrpcClient billingServiceGrpcClient,
+			KafkaProducerService kafkaProducerService) {
+		this.patientRepository = patientRepository;
+		this.billingServiceGrpcClient = billingServiceGrpcClient;
+		this.kafkaProducerService = kafkaProducerService;
+	}
 
-  public PatientResponseDTO createPatient(PatientRequestDTO patientRequestDTO) {
-    if (patientRepository.existsByEmail(patientRequestDTO.getEmail())) {
-      throw new EmailAlreadyExistsException(
-          "A patient with this email " + "already exists"
-              + patientRequestDTO.getEmail());
-    }
+	@Transactional(readOnly = true)
+	public List<PatientResponseDTO> getPatients() {
+		List<Patient> patients = patientRepository.findAll();
 
-    Patient newPatient = patientRepository.save(
-        PatientMapper.toModel(patientRequestDTO));
+		return patients.stream().map(PatientMapper::toDTO).toList();
+	}
 
-    billingServiceGrpcClient.createBillingAccount(newPatient.getId().toString(),
-        newPatient.getName(), newPatient.getEmail());
+	public PatientResponseDTO createPatient(PatientRequestDTO patientRequestDTO) {
+		if (patientRepository.existsByEmail(patientRequestDTO.email())) {
+			throw new EmailAlreadyExistsException(
+					"A patient with this email " + "already exists"
+							+ patientRequestDTO.email());
+		}
 
-    kafkaProducer.sendEvent(newPatient);
+		Patient newPatient = patientRepository.save(
+				PatientMapper.toEntity(patientRequestDTO));
 
-    return PatientMapper.toDTO(newPatient);
-  }
+		//    billingServiceGrpcClient.createBillingAccount(newPatient.getId().toString(),
+		//        newPatient.getName(), newPatient.getEmail());
 
-  public PatientResponseDTO updatePatient(UUID id,
-      PatientRequestDTO patientRequestDTO) {
+		kafkaProducerService.sendEvent(newPatient);
 
-    Patient patient = patientRepository.findById(id).orElseThrow(
-        () -> new PatientNotFoundException("Patient not found with ID: " + id));
+		return PatientMapper.toDTO(newPatient);
+	}
 
-    if (patientRepository.existsByEmailAndIdNot(patientRequestDTO.getEmail(),
-        id)) {
-      throw new EmailAlreadyExistsException(
-          "A patient with this email " + "already exists"
-              + patientRequestDTO.getEmail());
-    }
+	@Transactional
+	public PatientResponseDTO updatePatient(UUID id,
+			PatientRequestDTO patientRequestDTO) {
 
-    patient.setName(patientRequestDTO.getName());
-    patient.setAddress(patientRequestDTO.getAddress());
-    patient.setEmail(patientRequestDTO.getEmail());
-    patient.setDateOfBirth(LocalDate.parse(patientRequestDTO.getDateOfBirth()));
+		Patient patient = patientRepository.findById(id).orElseThrow(
+				() -> new PatientNotFoundException("Patient not found with ID: " + id));
 
-    Patient updatedPatient = patientRepository.save(patient);
-    return PatientMapper.toDTO(updatedPatient);
-  }
+		if (patientRepository.existsByEmailAndIdNot(patientRequestDTO.email(),
+				id)) {
+			throw new EmailAlreadyExistsException(
+					"A patient with this email " + "already exists"
+							+ patientRequestDTO.email());
+		}
 
-  public void deletePatient(UUID id) {
-    patientRepository.deleteById(id);
-  }
+		patient.setName(patientRequestDTO.name());
+		patient.setAddress(patientRequestDTO.address());
+		patient.setEmail(patientRequestDTO.email());
+		patient.setDateOfBirth(LocalDate.parse(patientRequestDTO.dateOfBirth()));
+		patient.setRegisteredDate(LocalDate.parse(patientRequestDTO.registeredDate()));
+
+		Patient updatedPatient = patientRepository.save(patient);
+		return PatientMapper.toDTO(updatedPatient);
+	}
+
+	@Transactional
+	public void deletePatient(UUID id) {
+		patientRepository.deleteById(id);
+	}
 }
