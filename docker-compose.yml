@@ -97,24 +97,11 @@ services:
     ports:
       - "4000:4000"
     environment:
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-0:9091,kafka-1:9091,kafka-2:9091
     depends_on:
       - kafka-0
       - kafka-1
       - kafka-2
-
-  auth-service:
-    build: ./auth-service
-    ports:
-      - "4005:4005"
-
-  api-gateway:
-    build: ./api-gateway
-    ports:
-      - "4004:4004"
-    depends_on:
-      - auth-service
-      - patient-service
 
   billing-service:
     build: ./billing-service
@@ -127,7 +114,42 @@ services:
     ports:
       - "4002:4002"
     environment:
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-0:9091,kafka-1:9091,kafka-2:9091
+    depends_on:
+      - kafka-0
+      - kafka-1
+      - kafka-2
+
+  appointment-service:
+    build: ./appointment-service
+    ports:
+      - "4003:4003"
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-0:9091,kafka-1:9091,kafka-2:9091
+    depends_on:
+      - kafka-0
+      - kafka-1
+      - kafka-2
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "4004:4004"
+    depends_on:
+      - auth-service
+      - patient-service
+
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "4005:4005"
+
+  lab-service:
+    build: ./lab-service
+    ports:
+      - "4006:4006"
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-0:9091,kafka-1:9091,kafka-2:9091
     depends_on:
       - kafka-0
       - kafka-1
