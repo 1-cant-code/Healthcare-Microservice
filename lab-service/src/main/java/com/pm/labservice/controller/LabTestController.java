@@ -33,16 +33,16 @@ public class LabTestController {
 		List<LabTestDTO> appointments = labService.getLabs();
 		return ResponseEntity.ok().body(appointments);
 	}
-
-	// Technician starts working on the lab test
+	
 	@PatchMapping("/{id}/start")
+	@Operation(summary = " Technician starts working on the lab test")
 	public ResponseEntity<LabTestDTO> startLabTest(@PathVariable UUID id) {
 
 		return ResponseEntity.ok(labService.startLabTest(id));
 	}
 
-	// Technician completes the lab test
 	@PatchMapping("/{id}/complete")
+	@Operation(summary = "Technician completes the lab test")
 	public ResponseEntity<LabTestDTO> completeLabTest(@PathVariable UUID id,
 			@Valid @RequestBody LabTestCompletionRequest request) {
 

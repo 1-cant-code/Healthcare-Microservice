@@ -1,6 +1,6 @@
-package com.pm.appointment.dto;
+package com.pm.appointment.dto
 
-public enum AppointmentStatus {
+enum class AppointmentStatus {
     SCHEDULED,
     CONFIRMED,
     COMPLETED,
