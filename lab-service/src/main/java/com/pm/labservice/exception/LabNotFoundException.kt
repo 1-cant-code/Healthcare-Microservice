@@ -1,8 +1,3 @@
-package com.pm.labservice.exception;
+package com.pm.labservice.exception
 
-public class LabNotFoundException extends RuntimeException {
-
-  public LabNotFoundException(String message) {
-    super(message);
-  }
-}
+class LabNotFoundException(message: String) : RuntimeException(message)

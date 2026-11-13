@@ -1,27 +1,28 @@
-package com.pm.labservice.dto;
+package com.pm.labservice.dto
 
-import com.pm.labservice.dto.validators.CreateLabValidationGroup;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import com.pm.labservice.dto.validators.CreateLabValidationGroup
+import jakarta.validation.constraints.Email
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Size
 
-public record LabTestRequestDTO(
-		@NotBlank(message = "Name is required")
-		@Size(max = 100, message = "Name cannot exceed 100 characters")
-		String name,
+data class LabTestRequestDTO(
+    @field:NotBlank(message = "Name is required")
+    @field:Size(max = 100, message = "Name cannot exceed 100 characters")
+    val name: String,
 
-		@NotBlank(message = "Email is required1")
-		@Email(message = "Email should be valid")
-		String email,
+    @field:NotBlank(message = "Email is required1")
+    @field:Email(message = "Email should be valid")
+    val email: String,
 
-		@NotBlank(message = "Address is required")
-		String address,
+    @field:NotBlank(message = "Address is required")
+    val address: String,
 
-		@NotBlank(message = "Date of birth is required")
-		String dateOfBirth,
+    @field:NotBlank(message = "Date of birth is required")
+    val dateOfBirth: String,
 
-		@NotBlank(groups = CreateLabValidationGroup.class, message =
-				"Registered date is required")
-		String registeredDate) {
-
-}
+    @field:NotBlank(
+        groups = [CreateLabValidationGroup::class], message =
+            "Registered date is required"
+    )
+    val registeredDate: String
+)

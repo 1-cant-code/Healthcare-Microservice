@@ -1,11 +1,11 @@
-package com.pm.labservice.event;
+package com.pm.labservice.event
 
-import java.time.LocalDateTime;
+import java.time.LocalDateTime
 
-public record LabTestRequested(
-    String requestId,
-    String patientId,
-    String practitionerId,
-    String testType,
-    LocalDateTime requestedAt
-) {}
+data class LabTestRequested(
+    val requestId: String,
+    val patientId: String,
+    val practitionerId: String,
+    val testType: String,
+    val requestedAt: LocalDateTime
+)

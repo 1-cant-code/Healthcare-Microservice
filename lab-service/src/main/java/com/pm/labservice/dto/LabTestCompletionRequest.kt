@@ -1,15 +1,13 @@
-package com.pm.labservice.dto;
+package com.pm.labservice.dto
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank
 
-public record LabTestCompletionRequest(
-		@NotBlank
-		String result,
-
-		String resultReference,
-
-		@NotBlank
-		String practitionerId
+data class LabTestCompletionRequest(
+    @field:NotBlank
+    val result: String,
+    val resultReference: String,
+    @field:NotBlank
+    val practitionerId: String
 ) {
 
 }

@@ -1,9 +1,9 @@
-package com.pm.labservice.dto;
+package com.pm.labservice.dto
 
-public record LabTestCompleted(
-		String requestId,
-		String patientId,
-		String practitionerId,
-		String status,
-		String resultReference
-) { }
+data class LabTestCompleted(
+    val requestId: String,
+    val patientId: String,
+    val practitionerId: String,
+    val status: String,
+    val resultReference: String?
+) {}

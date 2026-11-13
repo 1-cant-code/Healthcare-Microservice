@@ -1,44 +1,37 @@
-package com.pm.labservice.mapper;
+package com.pm.labservice.mapper
 
-import com.pm.labservice.dto.LabTestDTO;
-import com.pm.labservice.model.LabTest;
-import com.pm.labservice.event.LabTestRequested;
-import com.pm.labservice.model.LabTestStatus;
+import com.pm.labservice.dto.LabTestDTO
+import com.pm.labservice.model.LabTest
+import com.pm.labservice.event.LabTestRequested
+import com.pm.labservice.model.LabTestStatus
 
-public class LabMapper {
+object LabMapper {
 
-	private LabMapper() {
-		/* This utility class should not be instantiated */
-	}
+    fun toDTO(labTest: LabTest): LabTestDTO {
+        return LabTestDTO(
+            labTest.id.toString(),
+            labTest.requestId,
+            labTest.patientId,
+            labTest.practitionerId,
+            labTest.testType,
+            labTest.status.name,
+            labTest.result,
+            labTest.resultReference,
+            labTest.requestedAt.toString(),
+            labTest.completedAt?.let { it.toString() }
+        );
+    }
 
-	public static LabTestDTO toDTO(LabTest labTest) {
-		return new LabTestDTO(
-				labTest.getId().toString(),
-				labTest.getRequestId(),
-				labTest.getPatientId(),
-				labTest.getPractitionerId(),
-				labTest.getTestType(),
-				labTest.getStatus().name(),
-				labTest.getResult(),
-				labTest.getResultReference(),
-				labTest.getRequestedAt().toString(),
-				labTest.getCompletedAt() != null
-						? labTest.getCompletedAt().toString()
-						: null
-		);
-	}
+    fun toEntity(request: LabTestRequested): LabTest {
+        val labTest: LabTest = LabTest().apply{
+            requestId = request.requestId
+            patientId = request.patientId
+            practitionerId = request.practitionerId
+            testType = request.testType
+            requestedAt = request.requestedAt
+        };
 
-	public static LabTest toEntity(LabTestRequested request) {
-		LabTest labTest = new LabTest();
-
-		labTest.setRequestId(request.requestId());
-		labTest.setPatientId(request.patientId());
-		labTest.setPractitionerId(request.practitionerId());
-		labTest.setTestType(request.testType());
-		labTest.setRequestedAt(request.requestedAt());
-		labTest.setStatus(LabTestStatus.COMPLETED);
-
-		return labTest;
-	}
+        return labTest;
+    }
 
 }

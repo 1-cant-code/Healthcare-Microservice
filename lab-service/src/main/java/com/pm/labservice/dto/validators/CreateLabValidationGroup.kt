@@ -1,4 +1,3 @@
-package com.pm.labservice.dto.validators;
+package com.pm.labservice.dto.validators
 
-public interface CreateLabValidationGroup {
-}
+ interface CreateLabValidationGroup

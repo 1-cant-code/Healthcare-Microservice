@@ -1,12 +1,12 @@
-package com.pm.labservice.repository;
+package com.pm.labservice.repository
 
-import com.pm.labservice.model.LabTest;
-import java.util.UUID;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import com.pm.labservice.model.LabTest
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.stereotype.Repository
+import java.util.UUID
 
 @Repository
-public interface LabRepository extends JpaRepository<LabTest, UUID> {
+interface LabRepository : JpaRepository<LabTest, UUID> {
 
-	boolean existsByRequestId(String requestId);
+	fun existsByRequestId(requestId: String): Boolean;
 }

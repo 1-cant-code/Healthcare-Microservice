@@ -1,8 +1,8 @@
-package com.pm.labservice.dto;
+package com.pm.labservice.dto
 
-public record LabTestFailed(
-    String requestId,
-    String patientId,
-    String status,
-    String resultReference
+data class LabTestFailed(
+    val requestId: String,
+    val patientId: String,
+    val status: String,
+    val resultReference: String?
 ) {}

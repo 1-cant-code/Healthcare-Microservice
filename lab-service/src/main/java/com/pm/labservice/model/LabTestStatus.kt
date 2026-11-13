@@ -1,6 +1,6 @@
-package com.pm.labservice.model;
+package com.pm.labservice.model
 
-public enum LabTestStatus {
+ enum class LabTestStatus {
 	REQUESTED,
 	IN_PROGRESS,
 	COMPLETED,

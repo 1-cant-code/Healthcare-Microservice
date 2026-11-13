@@ -1,8 +1,3 @@
-package com.pm.labservice.exception;
+package com.pm.labservice.exception
 
-public class EmailAlreadyExistsException extends RuntimeException {
-
-  public EmailAlreadyExistsException(String message) {
-    super(message);
-  }
-}
+class EmailAlreadyExistsException(message: String ) : RuntimeException (message)
