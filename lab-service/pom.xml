@@ -102,11 +102,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<mainClass>
-						com.pm.appointment.AppointmentServiceApplicationKt
-					</mainClass>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.jetbrains.kotlin</groupId>
