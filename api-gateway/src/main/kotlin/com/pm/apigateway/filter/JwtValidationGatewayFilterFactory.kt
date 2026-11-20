@@ -13,7 +13,6 @@ class JwtValidationGatewayFilterFactory(
     webClientBuilder: WebClient.Builder,
     @Value("\${auth.service.url}") authServiceUrl: String): AbstractGatewayFilterFactory<Any>() {
 
-
     private val webClient: WebClient =
         webClientBuilder.baseUrl(authServiceUrl).build()
 
