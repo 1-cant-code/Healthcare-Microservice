@@ -1,4 +1,4 @@
-package com.pm.patientservice.config;
+package com.pm.patientservice.config
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.config.TopicConfig;
@@ -7,9 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
 
 @Configuration
-public class KafkaConfig {
+class KafkaConfig {
     @Bean
-    public NewTopic patientTopic() {
+    fun patientTopic(): NewTopic {
         return TopicBuilder.name("patient")
             .partitions(3)
             .replicas(3)
